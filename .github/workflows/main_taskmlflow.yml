@@ -64,7 +64,7 @@ jobs:
         id: deploy-to-function
         with:
           app-name: 'demo-functionmlflow'
-          slot-name: 'demo-functionmlflow'
+          slot-name: 'demoslot'
           package: .
           publish-profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE}}
           scm-do-build-during-deployment: true
