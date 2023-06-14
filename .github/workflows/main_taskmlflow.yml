@@ -65,6 +65,6 @@ jobs:
           app-name: 'taskmlflow'
           slot-name: 'Production'
           package: .
-          publish-profile: 'vWnt6jNu7s7J8LYJ6WmfNZZ3Ev4v4rjXkM0QHJyNHyFARACqdSchAY8Kx2hz'
+          publish-profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE}}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
