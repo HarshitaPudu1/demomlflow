@@ -58,14 +58,13 @@ jobs:
           name: python-app
           path: .
 
-
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'demo-functionmlflow'
-          slot-name: 'demoslot'
-          package: .
-          publish-profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE}}
+          app-name: 'taskmlflow'
+          slot-name: 'Production'
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
