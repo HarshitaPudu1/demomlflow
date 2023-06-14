@@ -64,7 +64,7 @@ jobs:
         with:
           app-name: 'taskmlflow'
           slot-name: 'Production'
-          package: '.'
+          package: .
           publish-profile: 'vWnt6jNu7s7J8LYJ6WmfNZZ3Ev4v4rjXkM0QHJyNHyFARACqdSchAY8Kx2hz'
           scm-do-build-during-deployment: true
           enable-oryx-build: true
