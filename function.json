@@ -6,7 +6,14 @@
       "type": "blobTrigger",
       "direction": "in",
       "path": "demo-data",
-      "connection": "blobstorageaccount8b04cc_STORAGE"
+      "connection": "demodestblobaccounts_STORAGE"
+    },
+    {
+      "type": "blob",
+      "direction": "out",
+      "name": "$return",
+      "path": "demo-data/outputdata",
+      "connection": "demosrcblobstrgacc_STORAGE"
     }
   ]
 }
