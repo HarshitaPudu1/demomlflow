@@ -58,6 +58,7 @@ jobs:
           name: python-app
           path: .
 
+
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         id: deploy-to-function
