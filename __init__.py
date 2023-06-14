@@ -14,24 +14,24 @@ import os
 
 def main(myblob: func.InputStream):
     # Set up Azure ML workspace and experiment
-    workspace = Workspace.get(name="mlflowtask-resourcegroup", subscription_id="42a759f3-b606-45d2-9041-96e028b0c0c0", resource_group="taskresourcegroup")    experiment = Experiment(workspace=workspace, name="taskmlflow")
+    workspace = Workspace.get(name="mlflowtask-resourcegroup", subscription_id="42a759f3-b606-45d2-9041-96e028b0c0c0", resource_group="taskresourcegroup")    
     experiment = Experiment(workspace=workspace, name="taskmlflow")
 
-    blob_output_datastore_name = "outputdatastore"
-    blob_input_datastore_name = "inputdatastore"
+    blob_output_datastore_name = "outputdatastorage"
+    blob_input_datastore_name = "inputdatastorage"
     blob_output_datastore = Datastore.register_azure_blob_container(
            workspace=workspace,
            datastore_name=blob_output_datastore_name,
-           account_name="taskinputs", # Storage account name
-           container_name="inputcontainer", # Name of Azure blob container
-           account_key="PXPcfLhYNjeiqXiw/Zi5TS2Vu3qwXuUjcviHWZn1iY44dUjmkfrul1bFxCOG7tx8cjqpkYGvBcOB+AStnBFRTA==") # Storage account key
+           account_name="demosrcblobstrgacc", # Storage account name
+           container_name="demo-data", # Name of Azure blob container
+           account_key="vEAQYUZPQzaexyqCxP/Ssz2qoQFOk/aSwRjd2boJ7cjGXI47qQFJqmHUedaBlbbNZzZFxah2vQih+ASteqcCrw==") # Storage account key
 
     blob_input_datastore = Datastore.register_azure_blob_container(
            workspace=workspace,
            datastore_name=blob_input_datastore_name,
-           account_name="taskoutputs", # Storage account name
-           container_name="outputcontainer", # Name of Azure blob container
-           account_key="iDVbq8VfYxAvRhRYHex83xQOwySKkZL8Vadu+cMnyqC1okx/p3M/Q8FCFAgbj1kBpgM6k5aMvVS4+AStY4eZtg==") # Storage account key
+           account_name="demodestblobaccount", # Storage account name
+           container_name="demo-data", # Name of Azure blob container
+           account_key="SOBaChjoF28VMGwtpnJqvFatP1f949/v20wR4KmKG4DaDwAxQZYpPKnW/ff0nUm00C5Hb3mOzvUK+AStYppzOA==") # Storage account key
     
     output_data = PipelineData("output_data", datastore=Datastore(workspace, blob_output_datastore_name))
 
@@ -56,7 +56,7 @@ def main(myblob: func.InputStream):
     ]
     
     #Create compute instance
-    compute_name = "taskmlflow-instance"
+    compute_name = "taskmlflow-inst"
     compute_config = ComputeInstance.provisioning_configuration(
         vm_size="Standard_DS2_v2"
     )
@@ -79,7 +79,7 @@ def main(myblob: func.InputStream):
         arguments=script_params,
         inputs=[input_data_1, input_data_2],
         outputs=[output_data],
-        compute_target="taskmlflow-instance",
+        compute_target="taskmlflow-inst",
         runconfig={
             "environment": mlflow_env
         }
