@@ -5,15 +5,15 @@
       "name": "myblob",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "inputcontainer",
-      "connection": "taskinputs_STORAGE"
+      "path": "demo-data",
+      "connection": "blobstorageaccountsource_STORAGE"
     },
     {
       "type": "blob",
       "direction": "out",
       "name": "$return",
-      "path": "outputcontainer/outputdata",
-      "connection": "taskoutputs_STORAGE"
+      "path": "demo-data/outputdata",
+      "connection": "blobstorageaccountdestination_STORAGE"
     }
   ]
 }
