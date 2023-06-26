@@ -19,20 +19,21 @@ def main(myblob: func.InputStream):
 
     blob_output_datastore_name = "outputdatastorage"
     blob_input_datastore_name = "inputdatastorage"
+    print("Creating blob_output_datastore")
     blob_output_datastore = Datastore.register_azure_blob_container(
            workspace=workspace,
            datastore_name=blob_output_datastore_name,
            account_name="demosrcblobstrgacc", # Storage account name
            container_name="demo-data", # Name of Azure blob container
            account_key="vEAQYUZPQzaexyqCxP/Ssz2qoQFOk/aSwRjd2boJ7cjGXI47qQFJqmHUedaBlbbNZzZFxah2vQih+ASteqcCrw==") # Storage account key
-
+    print("creating blob_input_datastore")
     blob_input_datastore = Datastore.register_azure_blob_container(
            workspace=workspace,
            datastore_name=blob_input_datastore_name,
            account_name="demodestblobaccount", # Storage account name
            container_name="demo-data", # Name of Azure blob container
            account_key="SOBaChjoF28VMGwtpnJqvFatP1f949/v20wR4KmKG4DaDwAxQZYpPKnW/ff0nUm00C5Hb3mOzvUK+AStYppzOA==") # Storage account key
-    
+
     output_data = PipelineData("output_data", datastore=Datastore(workspace, blob_output_datastore_name))
 
     input_data_1 = DataReference(datastore=Datastore(workspace, "departmentdatastore"),data_reference_name="departmentsinput1", 
@@ -60,7 +61,7 @@ def main(myblob: func.InputStream):
     compute_config = ComputeInstance.provisioning_configuration(
         vm_size="Standard_DS2_v2"
     )
-    
+    print("create compute instance")
     try:
         # Check if the compute instance already exists
         compute_instance = ComputeTarget(workspace, compute_name)
@@ -70,7 +71,7 @@ def main(myblob: func.InputStream):
         compute_instance = ComputeInstance.create(workspace, compute_name, compute_config)
         compute_instance.wait_for_completion(show_output=True)
     
-
+    print("validation and combination")
     # Define validation and combination step
     validation_combination_step = PythonScriptStep(
         name="Validation and Combination",
@@ -84,7 +85,7 @@ def main(myblob: func.InputStream):
             "environment": mlflow_env
         }
     )
-
+    print("initiating pipeline")
     # Create MLflow pipeline
     pipeline = Pipeline(workspace=workspace, steps=[validation_combination_step])
 
