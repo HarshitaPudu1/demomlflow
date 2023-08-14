@@ -2,7 +2,7 @@ name: Create Tag on Merge to develop
 
 on:
   pull_request:
-    branches:
+     branches:
       - develop
 
 jobs:
@@ -15,28 +15,29 @@ jobs:
 
       - name: Determine merge status
         id: merge_status
-        run: echo "::set-output name=merged::${{ github.event.pull_request.merged }}"
+        run: echo "MERGED=${{ github.event.pull_request.merged }}" >> $GITHUB_ENV
 
       - name: Determine base and head refs
         #if: steps.merge_status.outputs.merged == 'true'
         id: refs
-        run: echo "::set-output name=base_ref::${{ github.event.pull_request.base.ref }}::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
+        run: echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+             echo "HEAD_REF=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
 
       - name: Check if base ref is 'develop'
-        #if: steps.refs.outputs.base_ref == 'develop' && steps.merge_status.outputs.merged == 'true'
+        #if: steps.refs.outputs.BASE_REF == 'develop' && steps.merge_status.outputs.merged == 'true'
         id: is_develop
-        run: echo "::set-output name=is_develop::true"
+        run: echo "IS_DEVELOP=true" >> $GITHUB_ENV
 
       - name: Get release version from head ref
-        #if: steps.is_develop.outputs.is_develop == 'true'
+        #if: steps.is_develop.outputs.IS_DEVELOP == 'true'
         id: get_release_version
         run: |
-          release_version=$(echo "${{ steps.refs.outputs.head_ref }}" | sed 's/^release\///')
-          echo "::set-output name=release::${release_version}"
+          release_version=$(echo "${{ steps.refs.outputs.HEAD_REF }}" | sed 's/^release\///')
+          echo "RELEASE=${release_version}" >> $GITHUB_ENV
 
       - name: Tag official release on develop branch
-        #if: steps.is_develop.outputs.is_develop == 'true'
+        #if: steps.is_develop.outputs.IS_DEVELOP == 'true'
         run: |
-          TAG_NAME="v${{ steps.get_release_version.outputs.release }}"
+          TAG_NAME="v${{ steps.get_release_version.outputs.RELEASE }}"
           git tag $TAG_NAME
           git push origin $TAG_NAME
