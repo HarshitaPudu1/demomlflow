@@ -2,7 +2,7 @@ name: Create Tag on Merge to develop
 
 on:
   pull_request:
-    types:
+    branches:
       - develop
 
 jobs:
