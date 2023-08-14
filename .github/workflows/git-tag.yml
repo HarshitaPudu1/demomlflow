@@ -18,24 +18,24 @@ jobs:
         run: echo "::set-output name=merged::${{ github.event.pull_request.merged }}"
 
       - name: Determine base and head refs
-        if: steps.merge_status.outputs.merged == 'true'
+        #if: steps.merge_status.outputs.merged == 'true'
         id: refs
         run: echo "::set-output name=base_ref::${{ github.event.pull_request.base.ref }}::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
 
       - name: Check if base ref is 'develop'
-        if: steps.refs.outputs.base_ref == 'develop' && steps.merge_status.outputs.merged == 'true'
+        #if: steps.refs.outputs.base_ref == 'develop' && steps.merge_status.outputs.merged == 'true'
         id: is_develop
         run: echo "::set-output name=is_develop::true"
 
       - name: Get release version from head ref
-        if: steps.is_develop.outputs.is_develop == 'true'
+        #if: steps.is_develop.outputs.is_develop == 'true'
         id: get_release_version
         run: |
           release_version=$(echo "${{ steps.refs.outputs.head_ref }}" | sed 's/^release\///')
           echo "::set-output name=release::${release_version}"
 
       - name: Tag official release on develop branch
-        if: steps.is_develop.outputs.is_develop == 'true'
+        #if: steps.is_develop.outputs.is_develop == 'true'
         run: |
           TAG_NAME="v${{ steps.get_release_version.outputs.release }}"
           git tag $TAG_NAME
