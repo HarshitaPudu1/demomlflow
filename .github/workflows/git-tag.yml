@@ -1,8 +1,8 @@
-name: Create Tag on Merge to develop branch
+name: Create Tag on Merge to develop
 
 on:
-  push:
-    branches:
+  pull_request:
+    types:
       - develop
 
 jobs:
@@ -13,13 +13,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create Tag
+      - name: Determine merge status
+        id: merge_status
+        run: echo "::set-output name=merged::${{ github.event.pull_request.merged }}"
+
+      - name: Determine base and head refs
+        if: steps.merge_status.outputs.merged == 'true'
+        id: refs
+        run: echo "::set-output name=base_ref::${{ github.event.pull_request.base.ref }}::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
+
+      - name: Check if base ref is 'develop'
+        if: steps.refs.outputs.base_ref == 'develop' && steps.merge_status.outputs.merged == 'true'
+        id: is_develop
+        run: echo "::set-output name=is_develop::true"
+
+      - name: Get release version from head ref
+        if: steps.is_develop.outputs.is_develop == 'true'
+        id: get_release_version
         run: |
-          # Create the tag
-          TAG_NAME="dev-deploy-1"
-          git tag $TAG_NAME 
+          release_version=$(echo "${{ steps.refs.outputs.head_ref }}" | sed 's/^release\///')
+          echo "::set-output name=release::${release_version}"
 
-          # Push the tag to the remote repository
+      - name: Tag official release on develop branch
+        if: steps.is_develop.outputs.is_develop == 'true'
+        run: |
+          TAG_NAME="v${{ steps.get_release_version.outputs.release }}"
+          git tag $TAG_NAME
           git push origin $TAG_NAME
-
-          
